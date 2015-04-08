@@ -1,29 +1,34 @@
 gulp = require 'gulp'
-browserify = require 'gulp-browserify'
-rename = require 'gulp-rename'
 browserSync = require 'browser-sync'
+browserify = require 'browserify'
+fs = require 'fs'
 
 gulp.task 'browser-sync', ->
   browserSync
     server:
       baseDir: './build'
 
+
 gulp.task 'build', ->
   browserSync.notify 'Compiling, please wait!'
-  gulp.src 'src/main.coffee', read: false
-    .pipe browserify
-      transform: ['coffeeify']
-      extensions: ['.coffee']
-      sourceMap: true
-      debug: true
-    .on 'error', (err) ->
-      console.log err.message
-    .pipe rename('index.js')
-    .pipe gulp.dest 'build/js'
+  bundler = browserify
+    extensions: '.coffee'
+    debug: true
+  .transform 'coffeeify'
+    .add './src/main.coffee'
+    .bundle()
+    .on 'error', browserifyError
+    .pipe fs.createWriteStream './build/js/index.js'
+
+browserifyError = (err) ->
+  browserSync.notify 'Compile error'
+  console.log err
+  console.log err.message
+  this.emit 'end'
 
 gulp.task 'build-reload', ['build'], browserSync.reload
 
 gulp.task 'watch', ->
   gulp.watch ['src/**/*.coffee'], ['build-reload']
 
-gulp.task 'default', ['browser-sync', 'watch']
+gulp.task 'default', ['build', 'browser-sync', 'watch']
