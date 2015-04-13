@@ -15,7 +15,7 @@ gulp.task 'build', ->
     extensions: '.coffee'
     debug: true
   .transform 'coffeeify'
-    .add './src/main.coffee'
+    .add './src/Main.coffee'
     .bundle()
     .on 'error', browserifyError
     .pipe fs.createWriteStream './build/js/index.js'
