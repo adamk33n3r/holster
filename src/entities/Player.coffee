@@ -15,7 +15,7 @@ class Player extends Entity
 
   constructor: (@game, @x, @y, @image) ->
     super @game, @x, @y, @image, null, true
-    @game.phaser.input.keyboard.addCallbacks @, @onDown, @onUp, @onPress
+    @game.input.addEventCallbacks @onDown, @onUp, @onPress
     @setupKeymapping("QUERTY")
 
     @airDrag = 0
@@ -31,10 +31,10 @@ class Player extends Entity
 
   update: ->
     super()
-    left  = @game.phaser.input.keyboard.isDown @keyboard_mode.left
-    right = @game.phaser.input.keyboard.isDown @keyboard_mode.right
+    left  = @game.input.isDown @keyboard_mode.left
+    right = @game.input.isDown @keyboard_mode.right
 
-    if @sprite.body.onFloor() or @sprite.body.blocked.down
+    if @sprite.body.onFloor() or @sprite.body.blocked.down or @sprite.body.touching.down
       @sprite.body.drag.x = @floorDrag
       @sprite.body.velocity.x = 0 if left or right
       @moveLeft()  if left
@@ -43,7 +43,7 @@ class Player extends Entity
     else
       @sprite.body.drag.x = @airDrag
 
-    if @game.phaser.input.keyboard.isDown Phaser.Keyboard.J
+    if @game.input.isDown Phaser.Keyboard.J
       if not @attacking
         @attacking = true
         @sword.sprite.rotation += 45 * (Math.PI / 180)
@@ -54,7 +54,7 @@ class Player extends Entity
           , 250
         , 250
 
-  onDown: (key) ->
+  onDown: (key) =>
     switch key.which
       when Phaser.Keyboard.SPACEBAR
         if @jumps < @maxJumps
@@ -62,12 +62,15 @@ class Player extends Entity
           @jumps++
       when Phaser.Keyboard.P
         @sprite.animations.play 'walk'
+      when Phaser.Keyboard.K
+        enemy = new Entity @game, 500, 300, 'enemy', null, true
+        @game.enemies.push enemy.sprite
 
-  onUp: (key) ->
+  onUp: (key) =>
     switch key.which
       when @keyboard_mode.left, @keyboard_mode.right
         @sprite.animations.play 'stand'
-  onPress: (key) ->
+  onPress: (key) =>
 
   equipEntity: (entity) ->
     @equipment.push entity

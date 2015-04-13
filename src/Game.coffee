@@ -1,4 +1,5 @@
-Debug  = require './Debug'
+Debug = require './Debug'
+Input = require './Input'
 
 class Game
   constructor: (startingState) ->
@@ -21,12 +22,14 @@ class Game
     @phaser = new Phaser.Game 640, 480,
       @renderer,
       @parent,
-        preload: @_preload
+        preload: @_preload startingState.preload
         create: @_create startingState.create
-        update: @_update
-        render: @_render
+        update: @_update startingState.update
+        render: @_render startingState.render
       , @antialias,
       @physicsConfig
+
+    @input = new Input @phaser
     @physics = Phaser.Physics.ARCADE
     @debug = new Debug @phaser
 
@@ -47,14 +50,16 @@ class Game
   # Phaser default states
   #######################
 
-  _preload: =>
-    console.log "Preloading"
-    #@load.image 'test', 'assets/test.png'
-    for assetType, assets of @assetsToLoad
-      for asset in assets
-        console.log "Loading #{asset[1]} as #{asset[0]}"
-        @phaser.load[assetType].apply @phaser.load, asset
-    console.log "Done..."
+  _preload: (preload) =>
+    =>
+      console.log "Preloading"
+      #@load.image 'test', 'assets/test.png'
+      for assetType, assets of @assetsToLoad
+        for asset in assets
+          console.log "Loading #{asset[1]} as #{asset[0]}"
+          @phaser.load[assetType].apply @phaser.load, asset
+      console.log "Done..."
+      preload?()
 
   _create: (create) =>
     =>
@@ -68,23 +73,27 @@ class Game
       @phaser.scale.setScreenSize true
 
       @phaser.time.advancedTiming = true
-      create()
+      create?()
 
-  _update: =>
-    for entity in @entities
-      entity.update()
+  _update: (update) =>
+    =>
+      update?()
+      for entity in @entities
+        entity.update()
 
-  _render: =>
-    @debug.add "Resolution: #{window.innerWidth}x#{window.innerHeight}"
-    @debug.add "FPS:        " + (@phaser.time.fps or '--')
-    @debug.add ""
-    @debug.add "Controls:"
-    @debug.add "Left:   A"
-    @debug.add "Right:  D"
-    @debug.add "Jump:   Space"
-    @debug.add "Attack: J"
-    @debug.flush()
-    @phaser.debug.timer(@phaser.time.events, 300, 14, '#0f0')
+  _render: (render) =>
+    =>
+      @debug.add "Resolution: #{window.innerWidth}x#{window.innerHeight}"
+      @debug.add "FPS:        " + (@phaser.time.fps or '--')
+      @debug.add ""
+      @debug.add "Controls:"
+      @debug.add "Left:   A"
+      @debug.add "Right:  D"
+      @debug.add "Jump:   Space"
+      @debug.add "Attack: J"
+      @debug.flush()
+      #@phaser.debug.timer(@phaser.time.events, 300, 14, '#0f0')
+      render?()
 
 
 module.exports = Game
