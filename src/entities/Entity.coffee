@@ -25,16 +25,9 @@ class Entity
   update: ->
     # Update entity every frame
 
-  updatePos: ->
-    @accel -= .1 if @accel >= .1
-    if @accel < 0
-      @accel = 0
-    @sprite.x += @accel
-
   takeDamage: (amt) ->
     @health -= amt
     @sprite.scale.setTo (@maxHealth - @health) / @maxHealth * 9 + 1
-    console.log @sprite.scale.x
     if @health < 1
       @holster.destroy @
 

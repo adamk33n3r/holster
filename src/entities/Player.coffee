@@ -23,7 +23,8 @@ class Player extends Entity
     @airDrag = 0
     @floorDrag = 5000
 
-    @sprite.animations.add 'walk', [4, 10, 11, 0, 1, 2, 7, 8, 9, 3], 10, true, true
+    #@sprite.animations.add 'walk', [4, 10, 11, 0, 1, 2, 7, 8, 9, 3], 10, true, true
+    @sprite.animations.add 'walk', [0,1], 10, true, true
     @sprite.animations.add 'stand', [4]
     @sprite.animations.play 'stand'
     @sprite.body.gravity.z = -5000
@@ -65,12 +66,16 @@ class Player extends Entity
       if not @is_shooting
         @is_shooting = true
         hotdog = new Bullet @holster, @gun.sprite.world.x + 40 * @sprite.scale.x, @gun.sprite.world.y + 10 * @sprite.scale.y, 'hotdog', @
+        # hotdog = new Bullet @holster, 985.5555555555, 329.722222222, 'hotdog', @
         hotdog.sprite.scale.setTo 2, 2
         @holster.queue =>
             @is_shooting = false
-        , 50
+        , 150
     else
       @shooting = false
+
+    if @holster.input.isDown Phaser.Keyboard.RIGHT
+      @holster.phaser.camera.x++
 
   onDown: (key) =>
     switch key.which

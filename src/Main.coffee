@@ -16,7 +16,6 @@ class Main
           ['enemy', 'assets/platformerGraphicsDeluxe/Enemies/blockerBody.png']
           ['sword', 'assets/sword.png']
           ['hotdog', 'assets/sprites/items/hotdog.png']
-          ['main', 'assets/sprites/peoples/main_body.png']
           ['arms', 'assets/sprites/peoples/main_arms.png']
           ['gun', 'assets/sprites/peoples/main_gun.png']
           ['text', 'assets/sprites/peoples/main_text.png']
@@ -24,6 +23,7 @@ class Main
         atlasJSONHash: [
           ['p1_walk', 'assets/platformerGraphicsDeluxe/Player/p1_walk/p1_walk.png','assets/platformerGraphicsDeluxe/Player/p1_walk/p1_walk.json']
           ['terrain', 'assets/sprites/terrain.png', 'assets/sprites/terrain.json']
+          ['main', 'assets/sprites/peoples/main_spritesheet.png', 'assets/sprites/peoples/main_spritesheet.json']
         ]
         spritesheet: [
           ['p1', 'assets/platformerGraphicsDeluxe/Player/p1_spritesheet.png', 67, 93, -1, 0, 6]
@@ -77,8 +77,9 @@ class Main
         @holster.debug.flush()
         @holster.phaser.debug.cameraInfo(@holster.phaser.camera, 302, 32)
         @holster.phaser.debug.spriteCoords(@player.sprite, 32, 500)
-        #for entity in @holster.entities
-          #@holster.phaser.debug.body entity.sprite, '#f00', false
+        for entity in @holster.entities
+          @holster.phaser.debug.body entity.sprite, '#f00', false
+        return
 window.onload = ->
   console.log "Welcome to my game!"
   window.game = new Main()
