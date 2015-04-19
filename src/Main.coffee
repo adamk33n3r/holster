@@ -16,6 +16,9 @@ class Main
           ['enemy', 'assets/platformerGraphicsDeluxe/Enemies/blockerBody.png']
           ['sword', 'assets/sword.png']
           ['hotdog', 'assets/sprites/items/hotdog.png']
+          ['main', 'assets/sprites/peoples/main.png']
+          ['arms', 'assets/sprites/peoples/main_arms.png']
+          ['gun', 'assets/sprites/peoples/main_gun.png']
         ]
         atlasJSONHash: [
           ['p1_walk', 'assets/platformerGraphicsDeluxe/Player/p1_walk/p1_walk.png','assets/platformerGraphicsDeluxe/Player/p1_walk/p1_walk.json']
@@ -34,13 +37,15 @@ class Main
         @layer1 = @map.createLayer 1
         @layer2 = @map.createLayer 2
         @layer.resizeWorld()
-        #@map.setCollision 74
+        @map.setCollision 3
 
         @holster.enemies = []
         @holster.phaser.physics.setBoundsToWorld()
-        @player = new Player @holster, 100, 400, 'p1'
-        sword = new Entity @holster, 10, 30, 'sword'
-        @player.equipSword sword
+        @player = new Player @holster, 100, 400, 'main'
+        gun = new Entity @holster, 0, 0, 'gun'
+        arms = new Entity @holster, 0, 0, 'arms'
+        gun.sprite.addChild arms.sprite
+        @player.equipGun gun
         @holster.follow @player, Phaser.Camera.FOLLOW_PLATFORMER
         @enemy = new Enemy @holster, 500, 300, 'enemy', @player
         @holster.enemies.push @enemy.sprite
@@ -49,7 +54,7 @@ class Main
         for enemy in @holster.enemies
           enemy.stopMoving = @holster.phaser.physics.arcade.overlap(@player.sprite, enemy)
         @holster.phaser.physics.arcade.collide @holster.enemies, @holster.enemies
-        #@holster.phaser.physics.arcade.collide @player.sprite, @layer
+        @holster.phaser.physics.arcade.collide @player.sprite, @layer
       render: =>
         @holster.debug.add "Resolution: #{window.innerWidth}x#{window.innerHeight}"
         @holster.debug.add "FPS:        " + (@holster.phaser.time.fps or '--')

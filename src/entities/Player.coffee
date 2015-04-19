@@ -37,7 +37,8 @@ class Player extends Entity
 
     @equipment = []
     @timer = 0
-    @attacking = false
+    @shooting = false
+    @is_shooting = false
 
   update: ->
     super()
@@ -58,24 +59,21 @@ class Player extends Entity
     @moveDown() if down
     @jumps = 0
 
-    if @holster.input.isDown Phaser.Keyboard.J
-      if not @attacking
-        @attacking = true
-        hotdog = new Entity @holster, @sprite.x + @sprite.body.halfWidth * @dir, @sprite.y, 'hotdog', null, true
-        hotdog.sprite.scale.setTo 2, 2
+    if @holster.input.isDown Phaser.Keyboard.SPACEBAR
+      @shooting = true
+      if not @is_shooting
+        @is_shooting = true
+        hotdog = new Entity @holster, @gun.sprite.world.x + 50 * @dir, @gun.sprite.world.y + 10, 'hotdog', null, true
+        # hotdog.sprite.scale.setTo 2, 2
         hotdog.sprite.body.velocity.x = 1000 * @dir
         @holster.queue =>
-            @attacking = false
+            @is_shooting = false
         , 50
+    else
+      @shooting = false
 
   onDown: (key) =>
     switch key.which
-      when Phaser.Keyboard.SPACEBAR
-        if @jumps < @maxJumps
-          @sprite.body.velocity.z = 1000
-          #@jumps++
-      when Phaser.Keyboard.P
-        @sprite.animations.play 'walk'
       when Phaser.Keyboard.K
         enemy = new Enemy @holster, 500, 300, 'enemy', @
         @holster.enemies.push enemy.sprite
@@ -97,6 +95,10 @@ class Player extends Entity
     @sword.sprite.anchor.setTo 0, 1
     @sword.sprite.scale.setTo 2, 2
     @equipEntity @sword
+
+  equipGun: (gun) ->
+    @gun = gun
+    @equipEntity @gun
 
   setupKeymapping: (mode) ->
     @keyboard_mode = @keyboard_modes[mode] if mode of @keyboard_modes

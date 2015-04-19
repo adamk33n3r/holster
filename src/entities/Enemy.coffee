@@ -3,7 +3,7 @@ Entity = require './Entity.coffee'
 class Enemy extends Entity
   constructor: (holster, x, y, image, @player) ->
     super holster, x, y, image, null, true
-    @SPEED = 250
+    @SPEED = 50
     @sprite.stopMoving = false
   update: ->
     @sprite.body.velocity.x = 0

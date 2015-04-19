@@ -170,9 +170,9 @@
         <key>globalSpriteSettings</key>
         <struct type="SpriteSettings">
             <key>scale</key>
-            <double>1</double>
+            <double>2</double>
             <key>scaleMode</key>
-            <enum type="ScaleMode">Smooth</enum>
+            <enum type="ScaleMode">Scale2x</enum>
             <key>innerPadding</key>
             <uint>0</uint>
             <key>extrude</key>

@@ -1,6 +1,9 @@
 Debug = require './Debug'
 Input = require './Input'
 
+GAME_WIDTH = 1024
+GAME_HEIGHT = 576
+
 class Holster
   constructor: (startingState) ->
     @renderer = Phaser.AUTO
@@ -19,7 +22,7 @@ class Holster
 
     @entities = []
 
-    @phaser = new Phaser.Game 1024, 576,
+    @phaser = new Phaser.Game GAME_WIDTH, GAME_HEIGHT,
       @renderer,
       @parent,
         preload: @_preload startingState.preload
@@ -71,7 +74,8 @@ class Holster
       @phaser.physics.arcade.gravity.y = 0
       #@phaser.physics.p2.gravity.y = 20
 
-      #@phaser.scale.scaleMode = Phaser.ScaleManager.RESIZE
+      @phaser.scale.scaleMode = Phaser.ScaleManager.RESIZE
+      # @phaser.scale.setMinMax 100, 100, window.innerWidth, window.innerWidth /16 * 9
       @phaser.scale.pageAlignHorizontally = true
       @phaser.scale.pageAlignVertically = true
       @phaser.scale.setScreenSize true

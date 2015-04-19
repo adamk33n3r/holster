@@ -33,15 +33,15 @@ class Entity
     @move 0, @speed
 
   moveRight: ->
-    @dir = 1
+    @dir = 1 if not @shooting
     @move @speed, 0
 
   moveLeft: =>
-    @dir = -1
+    @dir = -1 if not @shooting
     @move -@speed, 0
 
   move: (xSpeed, ySpeed) =>
-    @sprite.scale.x = @dir
+    @sprite.scale.x = @dir if not @shooting
     #if not @sprite.body.blocked.down and not @sprite.body.touching.down
     #  return
     @sprite.animations.play 'walk'
