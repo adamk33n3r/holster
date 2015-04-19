@@ -1,9 +1,10 @@
 class Entity
   constructor: (@holster, @x, @y, @image, @group, @gravity) ->
-    console.log "I Think Therefore I Am"
-    console.log "AT: #{@x}, #{@y}"
+    # console.log "I Think Therefore I Am"
+    # console.log "AT: #{@x}, #{@y}"
     @starting_frame = 1
     @sprite = @holster.add @, @gravity
+    @sprite.entity = @
     if @gravity
       @sprite.body.collideWorldBounds = true
       #@sprite.body.mass = 500
@@ -41,7 +42,8 @@ class Entity
     @move -@speed, 0
 
   move: (xSpeed, ySpeed) =>
-    @sprite.scale.x = @dir if not @shooting
+    if not @shooting and ((@sprite.scale.x >= 0) ^ (@dir < 0)) == 0 # not same sign
+      @sprite.scale.x = -@sprite.scale.x
     #if not @sprite.body.blocked.down and not @sprite.body.touching.down
     #  return
     @sprite.animations.play 'walk'

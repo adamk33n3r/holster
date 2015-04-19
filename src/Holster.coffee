@@ -6,8 +6,9 @@ GAME_HEIGHT = 576
 
 class Holster
   constructor: (startingState) ->
-    @renderer = Phaser.AUTO
+    @renderer = Phaser.CANVAS
     @parent = 'game-container'
+    @transparent = false
     @antialias = false
     if not startingState.assetsToLoad?
       @assetsToLoad =
@@ -21,6 +22,7 @@ class Holster
       audio: {}
 
     @entities = []
+    @entitiesToDelete = []
 
     @phaser = new Phaser.Game GAME_WIDTH, GAME_HEIGHT,
       @renderer,
@@ -29,8 +31,7 @@ class Holster
         create: @_create startingState.create
         update: @_update startingState.update
         render: @_render startingState.render
-      , @antialias,
-      @physicsConfig
+      , @transparent, @antialias, @physicsConfig
 
     @input = new Input @phaser
     @physics = Phaser.Physics.ARCADE
@@ -44,6 +45,9 @@ class Holster
     sprite = @phaser.add.sprite entity.x, entity.y, entity.image, entity.starting_frame, entity.group or undefined
     @phaser.physics.enable sprite, @physics if gravity
     return sprite
+
+  destroy: (entity) ->
+    @entitiesToDelete.push entity
 
   queue: (callback, delay) ->
     @phaser.time.events.add delay, callback
@@ -85,6 +89,15 @@ class Holster
 
   _update: (update) =>
     =>
+      for entity in @entitiesToDelete
+        console.log entity
+        console.log @entities
+        idx = @entities.indexOf entity
+        console.log idx
+        if idx > -1
+          @entities.splice idx, 1
+          entity.sprite.destroy()
+      @entitiesToDelete = []
       update?()
       for entity in @entities
         entity.update()

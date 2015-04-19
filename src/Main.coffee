@@ -34,14 +34,16 @@ class Main
         @map = @holster.phaser.add.tilemap 'map', 64, 64
         @map.addTilesetImage 'Terrain', 'terrain'
         @layer = @map.createLayer 0
-        @layer1 = @map.createLayer 1
-        @layer2 = @map.createLayer 2
         @layer.resizeWorld()
-        @map.setCollision 3
+        @map.setCollision 4
+
+        @stand_layer = @map.createLayer 1
+        @stand_text_layer = @map.createLayer 2
 
         @holster.enemies = []
         @holster.phaser.physics.setBoundsToWorld()
         @player = new Player @holster, 100, 400, 'main'
+        @player.sprite.scale.setTo 2, 2
         gun = new Entity @holster, 0, 0, 'gun'
         arms = new Entity @holster, 0, 0, 'arms'
         gun.sprite.addChild arms.sprite
@@ -55,15 +57,17 @@ class Main
           enemy.stopMoving = @holster.phaser.physics.arcade.overlap(@player.sprite, enemy)
         @holster.phaser.physics.arcade.collide @holster.enemies, @holster.enemies
         @holster.phaser.physics.arcade.collide @player.sprite, @layer
+        Phaser.Canvas.setSmoothingEnabled @holster.phaser.context, false if Phaser.Canvas.getSmoothingEnabled @holster.phaser.context
       render: =>
         @holster.debug.add "Resolution: #{window.innerWidth}x#{window.innerHeight}"
         @holster.debug.add "FPS:        " + (@holster.phaser.time.fps or '--')
         @holster.debug.add ""
         @holster.debug.add "Controls:"
+        @holster.debug.add "Up:     W"
+        @holster.debug.add "Down:   S"
         @holster.debug.add "Left:   A"
         @holster.debug.add "Right:  D"
-        @holster.debug.add "Jump:   Space"
-        @holster.debug.add "Attack: J"
+        @holster.debug.add "Attack: Space"
         @holster.debug.add "Spawn:  K"
         @holster.debug.add "Mouse: #{@holster.phaser.input.mousePointer.x}, #{@holster.phaser.input.mousePointer.y}"
         @holster.debug.flush()

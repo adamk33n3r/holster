@@ -1,5 +1,6 @@
 Entity = require './Entity'
 Enemy = require './Enemy'
+Bullet = require './Bullet'
 
 class Player extends Entity
   keyboard_modes:
@@ -63,9 +64,8 @@ class Player extends Entity
       @shooting = true
       if not @is_shooting
         @is_shooting = true
-        hotdog = new Entity @holster, @gun.sprite.world.x + 50 * @dir, @gun.sprite.world.y + 10, 'hotdog', null, true
-        # hotdog.sprite.scale.setTo 2, 2
-        hotdog.sprite.body.velocity.x = 1000 * @dir
+        hotdog = new Bullet @holster, @gun.sprite.world.x + 40 * @sprite.scale.x, @gun.sprite.world.y + 10 * @sprite.scale.y, 'hotdog', @
+        hotdog.sprite.scale.setTo 2, 2
         @holster.queue =>
             @is_shooting = false
         , 50
