@@ -1,4 +1,5 @@
 Entity = require './Entity'
+Enemy = require './Enemy'
 
 class Player extends Entity
   keyboard_modes:
@@ -13,9 +14,9 @@ class Player extends Entity
       left:  Phaser.Keyboard.A
       right: Phaser.Keyboard.E
 
-  constructor: (@game, @x, @y, @image) ->
-    super @game, @x, @y, @image, null, true
-    @game.input.addEventCallbacks @onDown, @onUp, @onPress
+  constructor: (holster, x, y, image) ->
+    super holster, x, y, image, null, true
+    @holster.input.addEventCallbacks @onDown, @onUp, @onPress
     @setupKeymapping("QUERTY")
 
     @airDrag = 0
@@ -24,6 +25,15 @@ class Player extends Entity
     @sprite.animations.add 'walk', [4, 10, 11, 0, 1, 2, 7, 8, 9, 3], 10, true, true
     @sprite.animations.add 'stand', [4]
     @sprite.animations.play 'stand'
+    @sprite.body.gravity.z = -5000
+    @sprite.body.drag.x = @floorDrag
+    @sprite.body.drag.y = @floorDrag
+
+    #@sprite.body.data.mass = 1000
+    #console.log @sprite.body.mass
+    #console.log @sprite.body.data.mass
+    #@sprite.body.data.gravityScale = 1
+    #@sprite.body.data.damping = .1
 
     @equipment = []
     @timer = 0
@@ -31,44 +41,48 @@ class Player extends Entity
 
   update: ->
     super()
-    left  = @game.input.isDown @keyboard_mode.left
-    right = @game.input.isDown @keyboard_mode.right
+    up  = @holster.input.isDown @keyboard_mode.up
+    down  = @holster.input.isDown @keyboard_mode.down
+    left  = @holster.input.isDown @keyboard_mode.left
+    right = @holster.input.isDown @keyboard_mode.right
 
-    if @sprite.body.onFloor() or @sprite.body.blocked.down or @sprite.body.touching.down
-      @sprite.body.drag.x = @floorDrag
-      @sprite.body.velocity.x = 0 if left or right
-      @moveLeft()  if left
-      @moveRight() if right
-      @jumps = 0
-    else
-      @sprite.body.drag.x = @airDrag
+    #if @sprite.body.onFloor() or @sprite.body.blocked.down or @sprite.body.touching.down
+    #if up or down or left or right
+    @sprite.body.velocity.x = 0
+    @sprite.body.velocity.y = 0
+    #else
+      #@sprite.body.drag.x = @airDrag
+    @moveLeft()  if left
+    @moveRight() if right
+    @moveUp() if up
+    @moveDown() if down
+    @jumps = 0
 
-    if @game.input.isDown Phaser.Keyboard.J
+    if @holster.input.isDown Phaser.Keyboard.J
       if not @attacking
         @attacking = true
-        @sword.sprite.rotation += 45 * (Math.PI / 180)
-        @game.queue =>
-          @sword.sprite.rotation -= 45 * (Math.PI / 180)
-          @game.queue =>
+        hotdog = new Entity @holster, @sprite.x + @sprite.body.halfWidth * @dir, @sprite.y, 'hotdog', null, true
+        hotdog.sprite.scale.setTo 2, 2
+        hotdog.sprite.body.velocity.x = 1000 * @dir
+        @holster.queue =>
             @attacking = false
-          , 250
-        , 250
+        , 50
 
   onDown: (key) =>
     switch key.which
       when Phaser.Keyboard.SPACEBAR
         if @jumps < @maxJumps
-          @sprite.body.velocity.y = -2000
-          @jumps++
+          @sprite.body.velocity.z = 1000
+          #@jumps++
       when Phaser.Keyboard.P
         @sprite.animations.play 'walk'
       when Phaser.Keyboard.K
-        enemy = new Entity @game, 500, 300, 'enemy', null, true
-        @game.enemies.push enemy.sprite
+        enemy = new Enemy @holster, 500, 300, 'enemy', @
+        @holster.enemies.push enemy.sprite
 
   onUp: (key) =>
     switch key.which
-      when @keyboard_mode.left, @keyboard_mode.right
+      when @keyboard_mode.left, @keyboard_mode.right, @keyboard_mode.up, @keyboard_mode.down
         @sprite.animations.play 'stand'
   onPress: (key) =>
 

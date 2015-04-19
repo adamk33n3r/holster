@@ -1,7 +1,7 @@
 Debug = require './Debug'
 Input = require './Input'
 
-class Game
+class Holster
   constructor: (startingState) ->
     @renderer = Phaser.AUTO
     @parent = 'game-container'
@@ -19,7 +19,7 @@ class Game
 
     @entities = []
 
-    @phaser = new Phaser.Game 640, 480,
+    @phaser = new Phaser.Game 1024, 576,
       @renderer,
       @parent,
         preload: @_preload startingState.preload
@@ -32,6 +32,9 @@ class Game
     @input = new Input @phaser
     @physics = Phaser.Physics.ARCADE
     @debug = new Debug @phaser
+
+  follow: (entity, style) ->
+    @phaser.camera.follow entity.sprite, style
 
   add: (entity, gravity) ->
     @entities.push entity
@@ -65,9 +68,10 @@ class Game
     =>
       @phaser.stage.backgroundColor = '#222'
       @phaser.physics.startSystem @physics
-      @phaser.physics.arcade.gravity.y = 10000
+      @phaser.physics.arcade.gravity.y = 0
+      #@phaser.physics.p2.gravity.y = 20
 
-      @phaser.scale.scaleMode = Phaser.ScaleManager.RESIZE
+      #@phaser.scale.scaleMode = Phaser.ScaleManager.RESIZE
       @phaser.scale.pageAlignHorizontally = true
       @phaser.scale.pageAlignVertically = true
       @phaser.scale.setScreenSize true
@@ -83,17 +87,8 @@ class Game
 
   _render: (render) =>
     =>
-      @debug.add "Resolution: #{window.innerWidth}x#{window.innerHeight}"
-      @debug.add "FPS:        " + (@phaser.time.fps or '--')
-      @debug.add ""
-      @debug.add "Controls:"
-      @debug.add "Left:   A"
-      @debug.add "Right:  D"
-      @debug.add "Jump:   Space"
-      @debug.add "Attack: J"
-      @debug.flush()
       #@phaser.debug.timer(@phaser.time.events, 300, 14, '#0f0')
       render?()
 
 
-module.exports = Game
+module.exports = Holster

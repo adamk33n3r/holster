@@ -29,6 +29,13 @@ browserifyError = (err) ->
 gulp.task 'build-reload', ['build'], browserSync.reload
 
 gulp.task 'watch', ->
-  gulp.watch ['src/**/*.coffee'], ['build-reload']
+  delay = 2000
+  gulp.watch ['src/**/*.coffee'], ->
+    if timer
+      clearTimeout timer
+    timer = setTimeout ->
+      gulp.start 'build-reload'
+      timer = 0
+    , delay
 
 gulp.task 'default', ['build', 'browser-sync', 'watch']

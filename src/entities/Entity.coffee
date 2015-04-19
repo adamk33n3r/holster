@@ -1,18 +1,17 @@
 class Entity
-  constructor: (@game, @x, @y, @image, @group, @gravity) ->
+  constructor: (@holster, @x, @y, @image, @group, @gravity) ->
     console.log "I Think Therefore I Am"
     console.log "AT: #{@x}, #{@y}"
     @starting_frame = 1
-    @sprite = @game.add @, @gravity
+    @sprite = @holster.add @, @gravity
     if @gravity
       @sprite.body.collideWorldBounds = true
-      @sprite.body.drag.x = 5000
-    @sprite.anchor.x = .5
-    @sprite.anchor.y = .5
+      #@sprite.body.mass = 500
+    @sprite.anchor.setTo .5, .5
 
     @limit = 50
     @accel = 0
-    @speed = 1000
+    @speed = 500
     @maxJumps = 2
     @jumps = 0
     @dir = 1
@@ -27,21 +26,28 @@ class Entity
       @accel = 0
     @sprite.x += @accel
 
+  moveUp: ->
+    @move 0, -@speed
+
+  moveDown: ->
+    @move 0, @speed
+
   moveRight: ->
     @dir = 1
-    @move @speed
+    @move @speed, 0
 
   moveLeft: =>
     @dir = -1
-    @move -@speed
+    @move -@speed, 0
 
-  move: (dir) =>
+  move: (xSpeed, ySpeed) =>
     @sprite.scale.x = @dir
-    if not @sprite.body.blocked.down and not @sprite.body.touching.down
-      return
+    #if not @sprite.body.blocked.down and not @sprite.body.touching.down
+    #  return
     @sprite.animations.play 'walk'
     #@accel += 1 * dir
-    @sprite.body.velocity.x += dir
+    @sprite.body.velocity.x += xSpeed
+    @sprite.body.velocity.y += ySpeed
     #@sprite.x += dir
 
 module.exports = Entity
