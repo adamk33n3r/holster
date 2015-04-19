@@ -37368,6 +37368,7 @@ Phaser.Component.Core.install.call(Phaser.Sprite.prototype, [
     'Delta',
     'Destroy',
     'FixedToCamera',
+    'Health',
     'InputEnabled',
     'InWorld',
     'LifeSpan',

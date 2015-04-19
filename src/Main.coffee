@@ -16,9 +16,10 @@ class Main
           ['enemy', 'assets/platformerGraphicsDeluxe/Enemies/blockerBody.png']
           ['sword', 'assets/sword.png']
           ['hotdog', 'assets/sprites/items/hotdog.png']
-          ['main', 'assets/sprites/peoples/main.png']
+          ['main', 'assets/sprites/peoples/main_body.png']
           ['arms', 'assets/sprites/peoples/main_arms.png']
           ['gun', 'assets/sprites/peoples/main_gun.png']
+          ['text', 'assets/sprites/peoples/main_text.png']
         ]
         atlasJSONHash: [
           ['p1_walk', 'assets/platformerGraphicsDeluxe/Player/p1_walk/p1_walk.png','assets/platformerGraphicsDeluxe/Player/p1_walk/p1_walk.json']
@@ -31,14 +32,14 @@ class Main
           ['map', 'assets/tilemap.json', null, Phaser.Tilemap.TILED_JSON]
         ]
       create: =>
-        @map = @holster.phaser.add.tilemap 'map', 64, 64
-        @map.addTilesetImage 'Terrain', 'terrain'
-        @layer = @map.createLayer 0
+        @holster.map = @holster.phaser.add.tilemap 'map', 64, 64
+        @holster.map.addTilesetImage 'Terrain', 'terrain'
+        @layer = @holster.map.createLayer 0
         @layer.resizeWorld()
-        @map.setCollision 4
+        @holster.map.setCollision 4
 
-        @stand_layer = @map.createLayer 1
-        @stand_text_layer = @map.createLayer 2
+        @stand_layer = @holster.map.createLayer 1
+        @stand_text_layer = @holster.map.createLayer 2
 
         @holster.enemies = []
         @holster.phaser.physics.setBoundsToWorld()
@@ -46,6 +47,9 @@ class Main
         @player.sprite.scale.setTo 2, 2
         gun = new Entity @holster, 0, 0, 'gun'
         arms = new Entity @holster, 0, 0, 'arms'
+        text = @holster.phaser.add.sprite 0, 0, 'text'
+        text.anchor.setTo .5, .5
+        @player.sprite.addChild text
         gun.sprite.addChild arms.sprite
         @player.equipGun gun
         @holster.follow @player, Phaser.Camera.FOLLOW_PLATFORMER

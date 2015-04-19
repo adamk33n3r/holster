@@ -90,10 +90,7 @@ class Holster
   _update: (update) =>
     =>
       for entity in @entitiesToDelete
-        console.log entity
-        console.log @entities
         idx = @entities.indexOf entity
-        console.log idx
         if idx > -1
           @entities.splice idx, 1
           entity.sprite.destroy()

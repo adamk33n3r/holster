@@ -16,6 +16,10 @@ class Entity
     @maxJumps = 2
     @jumps = 0
     @dir = 1
+    @maxHealth = 20
+    @health = @maxHealth
+
+    # Phaser.Component.Core.install.call @sprite, ['Health']
 
 
   update: ->
@@ -27,29 +31,11 @@ class Entity
       @accel = 0
     @sprite.x += @accel
 
-  moveUp: ->
-    @move 0, -@speed
-
-  moveDown: ->
-    @move 0, @speed
-
-  moveRight: ->
-    @dir = 1 if not @shooting
-    @move @speed, 0
-
-  moveLeft: =>
-    @dir = -1 if not @shooting
-    @move -@speed, 0
-
-  move: (xSpeed, ySpeed) =>
-    if not @shooting and ((@sprite.scale.x >= 0) ^ (@dir < 0)) == 0 # not same sign
-      @sprite.scale.x = -@sprite.scale.x
-    #if not @sprite.body.blocked.down and not @sprite.body.touching.down
-    #  return
-    @sprite.animations.play 'walk'
-    #@accel += 1 * dir
-    @sprite.body.velocity.x += xSpeed
-    @sprite.body.velocity.y += ySpeed
-    #@sprite.x += dir
+  takeDamage: (amt) ->
+    @health -= amt
+    @sprite.scale.setTo (@maxHealth - @health) / @maxHealth * 9 + 1
+    console.log @sprite.scale.x
+    if @health < 1
+      @holster.destroy @
 
 module.exports = Entity

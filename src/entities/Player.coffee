@@ -75,7 +75,7 @@ class Player extends Entity
   onDown: (key) =>
     switch key.which
       when Phaser.Keyboard.K
-        enemy = new Enemy @holster, 500, 300, 'enemy', @
+        enemy = new Enemy @holster, Math.random() * @holster.map.widthInPixels, Math.random() * @holster.map.heightInPixels, 'enemy', @
         @holster.enemies.push enemy.sprite
 
   onUp: (key) =>
@@ -102,5 +102,34 @@ class Player extends Entity
 
   setupKeymapping: (mode) ->
     @keyboard_mode = @keyboard_modes[mode] if mode of @keyboard_modes
+
+
+  moveUp: ->
+    @move 0, -@speed
+
+  moveDown: ->
+    @move 0, @speed
+
+  moveRight: ->
+    @dir = 1 if not @shooting
+    @move @speed, 0
+
+  moveLeft: =>
+    @dir = -1 if not @shooting
+    @move -@speed, 0
+
+  move: (xSpeed, ySpeed) =>
+    if not @shooting and ((@sprite.scale.x >= 0) ^ (@dir < 0)) == 0 # not same sign
+      @sprite.scale.x = -@sprite.scale.x
+      apron_text = @sprite.children[0]
+      apron_text.scale.x = -apron_text.scale.x
+      apron_text.x = if apron_text.x == 0 then -17 else 0
+    #if not @sprite.body.blocked.down and not @sprite.body.touching.down
+    #  return
+    @sprite.animations.play 'walk'
+    #@accel += 1 * dir
+    @sprite.body.velocity.x += xSpeed
+    @sprite.body.velocity.y += ySpeed
+    #@sprite.x += dir
 
 module.exports = Player
