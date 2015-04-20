@@ -5,7 +5,7 @@ GAME_WIDTH = 1024
 GAME_HEIGHT = 576
 
 class Holster
-  constructor: (startingState) ->
+  constructor: (@game, startingState) ->
     @renderer = Phaser.CANVAS
     @parent = 'game-container'
     @transparent = false
@@ -46,8 +46,11 @@ class Holster
     @phaser.physics.enable sprite, @physics if gravity
     return sprite
 
-  destroy: (entity) ->
-    @entitiesToDelete.push entity
+  remove: (entity, destroy) ->
+    if destroy
+      @entitiesToDelete.push entity
+    else
+      entity.sprite.kill()
 
   queue: (callback, delay) ->
     @phaser.time.events.add delay, callback
