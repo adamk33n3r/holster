@@ -56,6 +56,19 @@ class Holster
     @phaser.time.events.add delay, callback
 
 
+  addState: (name, state) ->
+    @phaser.state.add name,
+      create: @_create state.create
+      update: @_update state.update
+      render: @_render state.render
+
+  switchState: (name) ->
+    # for entity in @entities
+      # delete entity
+    @entities = []
+    @phaser.state.start name
+
+
 
 
 
@@ -76,6 +89,7 @@ class Holster
 
   _create: (create) =>
     =>
+      @phaser.stage.disableVisibilityChange = true
       @phaser.stage.backgroundColor = '#222'
       @phaser.physics.startSystem @physics
       @phaser.physics.arcade.gravity.y = 0
@@ -92,6 +106,7 @@ class Holster
 
   _update: (update) =>
     =>
+      Phaser.Canvas.setSmoothingEnabled @phaser.context, false if Phaser.Canvas.getSmoothingEnabled @phaser.context
       for entity in @entitiesToDelete
         idx = @entities.indexOf entity
         if idx > -1
@@ -99,6 +114,7 @@ class Holster
           entity.sprite.destroy()
       @entitiesToDelete = []
       update?()
+      # console.log @entities
       for entity in @entities
         entity.update()
 
@@ -106,6 +122,8 @@ class Holster
     =>
       #@phaser.debug.timer(@phaser.time.events, 300, 14, '#0f0')
       render?()
+      for entity in @entities
+        entity.render()
 
 
 module.exports = Holster

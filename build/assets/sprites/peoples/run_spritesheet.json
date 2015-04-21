@@ -1,0 +1,28 @@
+{"frames": {
+
+"RunGirl.png":
+{
+	"frame": {"x":2,"y":2,"w":53,"h":63},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":1,"w":53,"h":63},
+	"sourceSize": {"w":64,"h":64}
+},
+"RunGril3.png":
+{
+	"frame": {"x":2,"y":67,"w":40,"h":63},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":1,"w":40,"h":63},
+	"sourceSize": {"w":64,"h":64}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "run_spritesheet.png",
+	"format": "RGBA8888",
+	"size": {"w":57,"h":132},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8f64ce0b88beef5c94df81c09afc908e:0278c92e40f125ecc89f26f8333e6a83:3c81196deae638a097ada44f81ce5592$"
+}
+}

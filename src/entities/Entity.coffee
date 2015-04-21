@@ -5,14 +5,12 @@ class Entity
     @starting_frame = 1
     @sprite = @holster.add @, @gravity
     @sprite.entity = @
-    @sprite.anchor.setTo .5, .5
+    @sprite.anchor.setTo .5, 1
     @sprite.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST
 
     @limit = 50
     @accel = 0
     @speed = 500
-    @maxJumps = 2
-    @jumps = 0
     @dir = 1
 
     # Phaser.Component.Core.install.call @sprite, ['Health']
@@ -20,5 +18,6 @@ class Entity
 
   update: ->
     # Update entity every frame
+  render: ->
 
 module.exports = Entity

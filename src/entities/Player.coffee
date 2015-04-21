@@ -15,8 +15,8 @@ class Player extends Entity
       left:  Phaser.Keyboard.A
       right: Phaser.Keyboard.E
 
-  constructor: (holster, x, y, image) ->
-    super holster, x, y, image, null, true
+  constructor: (holster, x, y, image, group) ->
+    super holster, x, y, image, group, true
     @holster.input.addEventCallbacks @onDown, @onUp, @onPress
     @setupKeymapping("QUERTY")
 
@@ -75,9 +75,7 @@ class Player extends Entity
       @shooting = true
       if not @is_shooting
         @is_shooting = true
-        @getAmmo()?.fire @gun.sprite.world.x + 40 * @sprite.scale.x, @gun.sprite.world.y + 10 * @sprite.scale.y
-        # hotdog = new Bullet @holster, @gun.sprite.world.x + 40 * @sprite.scale.x, @gun.sprite.world.y + 10 * @sprite.scale.y, 'hotdog', @
-        # hotdog = new Bullet @holster, 985.5555555555, 329.722222222, 'hotdog', @
+        @getAmmo()?.fire @gun.sprite.world.x + 40 * @sprite.scale.x, @gun.sprite.world.y - 20 * @sprite.scale.y
         @holster.queue =>
           @is_shooting = false
         , 50
