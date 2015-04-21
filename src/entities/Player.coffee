@@ -54,10 +54,10 @@ class Player extends Entity
 
   update: ->
     super()
-    up  = @holster.input.isDown @keyboard_mode.up
-    down  = @holster.input.isDown @keyboard_mode.down
-    left  = @holster.input.isDown @keyboard_mode.left
-    right = @holster.input.isDown @keyboard_mode.right
+    up    = @holster.input.isDown(@keyboard_mode.up)    or @holster.input.isDown(Phaser.Keyboard.UP)
+    down  = @holster.input.isDown(@keyboard_mode.down)  or @holster.input.isDown(Phaser.Keyboard.DOWN)
+    left  = @holster.input.isDown(@keyboard_mode.left)  or @holster.input.isDown(Phaser.Keyboard.LEFT)
+    right = @holster.input.isDown(@keyboard_mode.right) or @holster.input.isDown(Phaser.Keyboard.RIGHT)
 
     #if @sprite.body.onFloor() or @sprite.body.blocked.down or @sprite.body.touching.down
     #if up or down or left or right
@@ -82,16 +82,13 @@ class Player extends Entity
     else
       @shooting = false
 
-    if @holster.input.isDown Phaser.Keyboard.RIGHT
-      @holster.phaser.camera.x++
-
   onDown: (key) =>
     # switch key.which
 
 
   onUp: (key) =>
     switch key.which
-      when @keyboard_mode.left, @keyboard_mode.right, @keyboard_mode.up, @keyboard_mode.down
+      when @keyboard_mode.left, @keyboard_mode.right, @keyboard_mode.up, @keyboard_mode.down, Phaser.Keyboard.RIGHT, Phaser.Keyboard.LEFT, Phaser.Keyboard.UP, Phaser.Keyboard.DOWN
         @sprite.animations.play 'stand'
   onPress: (key) =>
 
